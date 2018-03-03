@@ -279,7 +279,50 @@ public class PopData {
 	}
 	
 	public void popReview() {
+		String sql = "INSERT INTO REVIEWS VALUES (?, ?, ?, ?, ?, ?)";
 		
+		BufferedReader br = null;
+		FileReader fr = null;
+		
+		try {
+			System.out.println("Start inserting reviews data...");
+			
+			stat = conn.prepareStatement(sql);
+			
+			fr = new FileReader(review);
+			br = new BufferedReader(fr);
+			
+			int count = 0;
+			while(br.ready()) {
+				
+				JSONObject json = new JSONObject(br.readLine());
+				
+				stat.setString(1, json.getString("review_id"));
+				stat.setString(2, json.getString("user_id"));
+				stat.setInt(3, json.getInt("stars"));
+				stat.setDate(4, java.sql.Date.valueOf(json.getString("date")));
+				//stat.setString(5, json.getString("text"));
+				stat.setString(5, json.getString("type"));
+				stat.setString(6, json.getString("business_id"));
+				
+				
+				stat.executeUpdate();
+				
+				if(count % 10000 == 0)
+					System.out.println(count);
+				
+				count++;
+			}
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		} finally {
+			System.out.println("Done..");
+			try {
+				br.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	public void closeDB() {

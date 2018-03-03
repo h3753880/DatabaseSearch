@@ -22,6 +22,7 @@ public class Populate {
 		popData.popSubCat();
 		popData.popHour();
 		popData.popUser();
+		popData.popReview();
 		
 		popData.closeDB();
 		
