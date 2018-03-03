@@ -29,6 +29,7 @@ public class DeleteData {
 		String sqlRev = "DELETE FROM REVIEWS";
 		String sqlUserFriend = "DELETE FROM USER_FRIENDS";
 		String sqlUserVote = "DELETE FROM USER_VOTES";
+		String sqlSubCat = "DELETE FROM SUB_CATE";
 		
 		try {
 			System.out.println("Start deleting data...");
@@ -36,15 +37,16 @@ public class DeleteData {
 			conn.setAutoCommit(false);
 			stat = conn.createStatement();
 			
-			stat.executeUpdate(sqlUser);
-			stat.executeUpdate(sqlMainCat);
-			stat.executeUpdate(sqlBus);
 			stat.executeUpdate(sqlCheck);
-			stat.executeUpdate(sqlHour);
-			stat.executeUpdate(sqlRevVote);
-			stat.executeUpdate(sqlRev);
 			stat.executeUpdate(sqlUserFriend);
 			stat.executeUpdate(sqlUserVote);
+			stat.executeUpdate(sqlRevVote);
+			stat.executeUpdate(sqlRev);
+			stat.executeUpdate(sqlUser);
+			stat.executeUpdate(sqlHour);
+			stat.executeUpdate(sqlSubCat);
+			stat.executeUpdate(sqlBus);
+			stat.executeUpdate(sqlMainCat);
 			
 			conn.commit();
 		} catch (Exception e1) {

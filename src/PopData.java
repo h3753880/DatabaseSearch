@@ -4,6 +4,10 @@ import java.util.*;
 import org.json.*;
 
 public class PopData {
+	private String[] cates = {"Active Life", "Arts & Entertainment", "Automotive", "Car Rental", "Cafes", "Beauty & Spas", "Convenience Stores", "Dentists",
+			"Doctors", "Drugstores", "Department Stores", "Education", "Event Planning & Services", "Flowers & Gifts", "Food", "Health & Medical", 
+			"Home Services", "Home & Garden", "Hospitals", "Hotels & Travel", "Hardware Stores", "Grocery", "Medical Centers", "Nurseries & Gardening", 
+			"Nightlife", "Restaurants", "Shopping", "Transportation"};
 	private String user = "yelp_user.json";
 	private String checkin = "yelp_checkin.json";
 	private String review = "yelp_review.json";
@@ -38,15 +42,7 @@ public class PopData {
 	}
 	
 	public void popMainCate() {
-		String[] cates = {"Active Life", "Arts & Entertainment", "Automotive", "Car Rental", "Cafes", "Beauty & Spas", "Convenience Stores", "Dentists",
-				"Doctors", "Drugstores", "Department Stores", "Education", "Event Planning & Services", "Flowers & Gifts", "Food", "Health & Medical", 
-				"Home Services", "Home & Garden", "Hospitals", "Hotels & Travel", "Hardware Stores", "Grocery", "Medical Centers", "Nurseries & Gardening", 
-				"Nightlife", "Restaurants", "Shopping", "Transportation"};
-		
 		String sql = "INSERT INTO MAIN_CATE VALUES (?, ?)";
-		
-		BufferedReader br = null;
-		FileReader fr = null;
 		
 		try {
 			System.out.println("Start inserting categories data...");
@@ -113,8 +109,169 @@ public class PopData {
 		}
 	}
 	
-	public void popBusiness() {
+	public void popSubCat() {
+		String sql = "INSERT INTO SUB_CATE VALUES (?, ?)";
 		
+		BufferedReader br = null;
+		FileReader fr = null;
+		
+		try {
+			System.out.println("Start inserting sub_cate data...");
+			
+			stat = conn.prepareStatement(sql);
+			
+			fr = new FileReader(business);
+			br = new BufferedReader(fr);
+			
+			int count = 0;
+			while(br.ready()) {
+				
+				JSONObject json = new JSONObject(br.readLine());
+				
+				JSONArray ar = json.getJSONArray("categories");
+				
+				stat.setString(1, json.getString("business_id"));
+				
+				for(int i=0; i<ar.length(); i++) {		
+					String subName = ar.getString(i);
+					int index = Arrays.binarySearch(cates, subName);
+					
+					if(index < 0) {
+						stat.setString(2, subName);
+						stat.executeUpdate();
+
+						stat.setString(1, json.getString("business_id"));
+					}
+				}
+				
+				if(count % 10000 == 0)
+					System.out.println(count);
+				
+				count++;
+			}
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		} finally {
+			System.out.println("Done..");
+			try {
+				br.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	//business
+	public void popBusiness() {
+		String sql = "INSERT INTO BUSINESS VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		
+		BufferedReader br = null;
+		FileReader fr = null;
+		
+		try {
+			System.out.println("Start inserting business data...");
+			
+			stat = conn.prepareStatement(sql);
+			
+			fr = new FileReader(business);
+			br = new BufferedReader(fr);
+			
+			int count = 0;
+			while(br.ready()) {
+				
+				JSONObject json = new JSONObject(br.readLine());
+				
+				stat.setString(1, json.getString("business_id"));
+				stat.setString(2, json.getString("full_address"));
+				stat.setInt(3, json.getBoolean("open")? 1: 0);
+				
+				JSONArray ar = json.getJSONArray("categories");
+				for(int i=0; i<ar.length(); i++) {				
+					int index = Arrays.binarySearch(cates, ar.getString(i));
+					
+					if(index >= 0) {
+						stat.setInt(4, index + 1);
+						break;
+					}
+				}
+				
+				stat.setString(5, json.getString("city"));
+				stat.setString(6, json.getString("state"));
+				stat.setDouble(7, json.getDouble("latitude"));
+				stat.setDouble(8, json.getDouble("longitude"));
+				stat.setInt(9, json.getInt("review_count"));
+				stat.setString(10, json.getString("name"));
+				stat.setInt(11, json.getInt("stars"));
+				stat.setString(12, json.getString("type"));
+				
+				stat.executeUpdate();
+				
+				if(count % 10000 == 0)
+					System.out.println(count);
+				
+				count++;
+			}
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		} finally {
+			System.out.println("Done..");
+			try {
+				br.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void popHour() {
+		String sql = "INSERT INTO HOURS VALUES (?, ?, ?, ?)";
+		
+		BufferedReader br = null;
+		FileReader fr = null;
+		
+		try {
+			System.out.println("Start inserting hours data...");
+			
+			stat = conn.prepareStatement(sql);
+			
+			fr = new FileReader(business);
+			br = new BufferedReader(fr);
+			
+			int count = 0;
+			while(br.ready()) {
+				
+				JSONObject json = new JSONObject(br.readLine());
+				
+				stat.setString(1, json.getString("business_id"));
+				Set<String> k = json.getJSONObject("hours").keySet();
+				
+				for(String week: k) {
+					JSONObject weekObj = json.getJSONObject("hours").getJSONObject(week);
+					
+					stat.setString(2, week);// week
+					stat.setString(3, weekObj.getString("open"));
+					stat.setString(4, weekObj.getString("close"));
+					
+					stat.executeUpdate();
+					
+					stat.setString(1, json.getString("business_id"));
+				}
+				
+				if(count % 10000 == 0)
+					System.out.println(count);
+				
+				count++;
+			}
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		} finally {
+			System.out.println("Done..");
+			try {
+				br.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	public void popCheckin() {

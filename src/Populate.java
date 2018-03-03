@@ -19,6 +19,8 @@ public class Populate {
 		
 		popData.popMainCate();
 		popData.popBusiness();
+		popData.popSubCat();
+		popData.popHour();
 		popData.popUser();
 		
 		popData.closeDB();
@@ -31,7 +33,7 @@ public class Populate {
 		
 		try {
 			
-			fr = new FileReader("yelp_user.json");
+			fr = new FileReader("yelp_business.json");
 			br = new BufferedReader(fr);
 			
 			int count = 0;
@@ -40,8 +42,8 @@ public class Populate {
 				JSONObject json = new JSONObject(br.readLine());
 				
 				
-				if(count == 65) {
-					System.out.println(json.get("elite"));
+				if(count == 133) {
+					System.out.println(json.get("hours"));
 					break;
 				}
 				count++;
