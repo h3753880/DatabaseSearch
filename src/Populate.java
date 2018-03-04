@@ -1,5 +1,7 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.Set;
+
 import org.json.JSONObject;
 
 public class Populate {
@@ -23,6 +25,7 @@ public class Populate {
 		popData.popHour();
 		popData.popUser();
 		popData.popReview();
+		popData.popUserFriend();
 		
 		popData.closeDB();
 		
@@ -34,7 +37,7 @@ public class Populate {
 		
 		try {
 			
-			fr = new FileReader("yelp_business.json");
+			fr = new FileReader("yelp_user.json");
 			br = new BufferedReader(fr);
 			
 			int count = 0;
@@ -43,8 +46,13 @@ public class Populate {
 				JSONObject json = new JSONObject(br.readLine());
 				
 				
-				if(count == 133) {
-					System.out.println(json.get("hours"));
+				if(count == 5) {
+					Set<String> k = json.getJSONObject("friends").keySet();
+					
+					for(String friend: k) {
+						System.out.println(json.getJSONObject("friends").getString(friend));
+					}
+					System.out.println(json.get("friends"));
 					break;
 				}
 				count++;

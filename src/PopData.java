@@ -63,6 +63,49 @@ public class PopData {
 		}
 	}
 	
+	public void popUserFriend() {
+		String sql = "INSERT INTO USER_FRIENDS VALUES (?, ?)";
+		
+		BufferedReader br = null;
+		FileReader fr = null;
+		
+		try {
+			System.out.println("Start inserting user friends data...");
+			
+			stat = conn.prepareStatement(sql);
+			
+			fr = new FileReader(user);
+			br = new BufferedReader(fr);
+			
+			int count = 0;
+			while(br.ready()) {
+				
+				JSONObject json = new JSONObject(br.readLine());
+				Set<String> k = json.getJSONObject("friends").keySet();
+				
+				for(String friend: k) {
+					stat.setString(1, json.getString("user_id"));
+					stat.setString(2, json.getJSONObject("friends").getString(friend));/////
+					stat.executeUpdate();
+				}
+				
+				if(count % 10000 == 0)
+					System.out.println(count);
+				
+				count++;
+			}
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		} finally {
+			System.out.println("Done..");
+			try {
+				br.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	public void popUser() {
 		String sql = "INSERT INTO USERS VALUES (?, ?, ?, ?, ?, ?, ?)";
 		
@@ -274,9 +317,93 @@ public class PopData {
 		}
 	}
 	
-	public void popCheckin() {
+	/*public void popUserVote() {
+		String sql = "INSERT INTO USER_VOTES VALUES (?, ?, ?)";
 		
-	}
+		BufferedReader br = null;
+		FileReader fr = null;
+		
+		try {
+			System.out.println("Start inserting user vote data...");
+			
+			stat = conn.prepareStatement(sql);
+			
+			fr = new FileReader(user);
+			br = new BufferedReader(fr);
+			
+			int count = 0;
+			while(br.ready()) {
+				
+				JSONObject json = new JSONObject(br.readLine());
+				Set<String> k = json.getJSONObject("votes").keySet();
+				
+				for(String type: k) {
+					stat.setString(1, json.getString("review_id"));
+					stat.setString(2, type);
+					stat.setInt(3, json.getJSONObject("votes").getInt(type));
+					stat.executeUpdate();
+				}
+				
+				if(count % 10000 == 0)
+					System.out.println(count);
+				
+				count++;
+			}
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		} finally {
+			System.out.println("Done..");
+			try {
+				br.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}*/
+	
+	/*public void popRevVote() {
+		String sql = "INSERT INTO REV_VOTES VALUES (?, ?, ?)";
+		
+		BufferedReader br = null;
+		FileReader fr = null;
+		
+		try {
+			System.out.println("Start inserting review vote data...");
+			
+			stat = conn.prepareStatement(sql);
+			
+			fr = new FileReader(review);
+			br = new BufferedReader(fr);
+			
+			int count = 0;
+			while(br.ready()) {
+				
+				JSONObject json = new JSONObject(br.readLine());
+				Set<String> k = json.getJSONObject("votes").keySet();
+				
+				for(String type: k) {
+					stat.setString(1, json.getString("review_id"));
+					stat.setString(2, type);
+					stat.setInt(3, json.getJSONObject("votes").getInt(type));
+					stat.executeUpdate();
+				}
+				
+				if(count % 10000 == 0)
+					System.out.println(count);
+				
+				count++;
+			}
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		} finally {
+			System.out.println("Done..");
+			try {
+				br.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}*/
 	
 	public void popReview() {
 		String sql = "INSERT INTO REVIEWS VALUES (?, ?, ?, ?, ?, ?)";
