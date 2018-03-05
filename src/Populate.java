@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.Set;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class Populate {
@@ -27,6 +28,8 @@ public class Populate {
 		popData.popReview();
 		popData.popUserFriend();
 		
+		popData.popCheckin();
+		
 		popData.closeDB();
 		
 	}
@@ -37,7 +40,7 @@ public class Populate {
 		
 		try {
 			
-			fr = new FileReader("yelp_user.json");
+			fr = new FileReader("yelp_checkin.json");
 			br = new BufferedReader(fr);
 			
 			int count = 0;
@@ -47,12 +50,9 @@ public class Populate {
 				
 				
 				if(count == 5) {
-					Set<String> k = json.getJSONObject("friends").keySet();
 					
-					for(String friend: k) {
-						System.out.println(json.getJSONObject("friends").getString(friend));
-					}
-					System.out.println(json.get("friends"));
+					System.out.println(json.get("checkin_info"));
+					
 					break;
 				}
 				count++;

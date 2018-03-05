@@ -81,11 +81,11 @@ public class PopData {
 			while(br.ready()) {
 				
 				JSONObject json = new JSONObject(br.readLine());
-				Set<String> k = json.getJSONObject("friends").keySet();
+				JSONArray jay = json.getJSONArray("friends");
 				
-				for(String friend: k) {
+				for(Object friend: jay) {
 					stat.setString(1, json.getString("user_id"));
-					stat.setString(2, json.getJSONObject("friends").getString(friend));/////
+					stat.setString(2, friend.toString());
 					stat.executeUpdate();
 				}
 				
@@ -107,7 +107,7 @@ public class PopData {
 	}
 	
 	public void popUser() {
-		String sql = "INSERT INTO USERS VALUES (?, ?, ?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO USERS VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		
 		BufferedReader br = null;
 		FileReader fr = null;
@@ -132,6 +132,9 @@ public class PopData {
 				stat.setInt(5, json.getInt("fans"));
 				stat.setDouble(6, json.getDouble("average_stars"));
 				stat.setString(7, json.getString("type"));
+				stat.setInt(8, json.getJSONObject("votes").getInt("useful"));
+				stat.setInt(9, json.getJSONObject("votes").getInt("funny"));
+				stat.setInt(10, json.getJSONObject("votes").getInt("cool"));
 				
 				stat.executeUpdate();
 				
@@ -405,8 +408,58 @@ public class PopData {
 		}
 	}*/
 	
+	public void popCheckin() {
+		String sql = "INSERT INTO CHECKIN VALUES (?, ?, ?, ?)";
+		
+		BufferedReader br = null;
+		FileReader fr = null;
+		
+		try {
+			System.out.println("Start inserting checkin data...");
+			
+			stat = conn.prepareStatement(sql);
+			
+			fr = new FileReader(checkin);
+			br = new BufferedReader(fr);
+			
+			int count = 0;
+			while(br.ready()) {
+				
+				JSONObject json = new JSONObject(br.readLine());
+				
+				stat.setString(1, json.getString("business_id"));
+				
+				JSONObject obj = json.getJSONObject("checkin_info");
+				Set<String> set = obj.keySet();
+				
+				for(String info: set) {
+					stat.setInt(2, Integer.parseInt(info.split("-")[1]));//day
+					stat.setInt(3, Integer.parseInt(info.split("-")[0]));//hour
+					stat.setInt(4, json.getJSONObject("checkin_info").getInt(info));//count
+				}
+				
+				
+				stat.executeUpdate();
+				
+				if(count % 10000 == 0)
+					System.out.println(count);
+				
+				count++;
+			}
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		} finally {
+			System.out.println("Done..");
+			try {
+				br.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	public void popReview() {
-		String sql = "INSERT INTO REVIEWS VALUES (?, ?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO REVIEWS VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		
 		BufferedReader br = null;
 		FileReader fr = null;
@@ -431,6 +484,9 @@ public class PopData {
 				//stat.setString(5, json.getString("text"));
 				stat.setString(5, json.getString("type"));
 				stat.setString(6, json.getString("business_id"));
+				stat.setInt(7, json.getJSONObject("votes").getInt("useful"));
+				stat.setInt(8, json.getJSONObject("votes").getInt("funny"));
+				stat.setInt(9, json.getJSONObject("votes").getInt("cool"));
 				
 				
 				stat.executeUpdate();

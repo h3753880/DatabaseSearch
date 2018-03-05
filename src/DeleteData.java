@@ -25,10 +25,10 @@ public class DeleteData {
 		String sqlBus = "DELETE FROM BUSINESS";
 		String sqlCheck = "DELETE FROM CHECKIN";
 		String sqlHour = "DELETE FROM HOURS";
-		String sqlRevVote = "DELETE FROM REV_VOTES";
+		//String sqlRevVote = "DELETE FROM REV_VOTES";
 		String sqlRev = "DELETE FROM REVIEWS";
 		String sqlUserFriend = "DELETE FROM USER_FRIENDS";
-		String sqlUserVote = "DELETE FROM USER_VOTES";
+		//String sqlUserVote = "DELETE FROM USER_VOTES";
 		String sqlSubCat = "DELETE FROM SUB_CATE";
 		
 		try {
@@ -39,8 +39,8 @@ public class DeleteData {
 			
 			stat.executeUpdate(sqlCheck);
 			stat.executeUpdate(sqlUserFriend);
-			stat.executeUpdate(sqlUserVote);
-			stat.executeUpdate(sqlRevVote);
+			//stat.executeUpdate(sqlUserVote);
+			//stat.executeUpdate(sqlRevVote);
 			stat.executeUpdate(sqlRev);
 			stat.executeUpdate(sqlUser);
 			stat.executeUpdate(sqlHour);
