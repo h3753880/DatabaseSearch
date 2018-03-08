@@ -436,12 +436,16 @@ public class PopData {
 					stat.setInt(2, Integer.parseInt(info.split("-")[1]));//day
 					stat.setInt(3, Integer.parseInt(info.split("-")[0]));//hour
 					stat.setInt(4, json.getJSONObject("checkin_info").getInt(info));//count
+
+					stat.executeUpdate();
+					
+					stat.setString(1, json.getString("business_id"));
+					
 				}
 				
+				//System.out.println(count);
 				
-				stat.executeUpdate();
-				
-				if(count % 10000 == 0)
+				if(count % 1000 == 0)
 					System.out.println(count);
 				
 				count++;

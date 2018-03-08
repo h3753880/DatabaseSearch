@@ -1,8 +1,5 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.util.Set;
-
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class Populate {
