@@ -23,13 +23,11 @@ public class DeleteData {
 		String sqlUser = "DELETE FROM USERS";
 		String sqlMainCat = "DELETE FROM MAIN_CATE";
 		String sqlBus = "DELETE FROM BUSINESS";
-		String sqlCheck = "DELETE FROM CHECKIN";
-		String sqlHour = "DELETE FROM HOURS";
-		//String sqlRevVote = "DELETE FROM REV_VOTES";
-		String sqlRev = "DELETE FROM REVIEWS";
-		String sqlUserFriend = "DELETE FROM USER_FRIENDS";
-		//String sqlUserVote = "DELETE FROM USER_VOTES";
-		String sqlSubCat = "DELETE FROM SUB_CATE";
+		String sqlCheck = "TRUNCATE TABLE CHECKIN";//"DELETE FROM CHECKIN";
+		String sqlHour = "TRUNCATE TABLE HOURS";//"DELETE FROM HOURS";
+		String sqlRev = "TRUNCATE TABLE REVIEWS";//"DELETE FROM REVIEWS";
+		String sqlUserFriend = "TRUNCATE TABLE USER_FRIENDS";//"DELETE FROM USER_FRIENDS";
+		String sqlSubCat = "TRUNCATE TABLE SUB_CATE";//"DELETE FROM SUB_CATE";
 		
 		try {
 			System.out.println("Start deleting data...");
